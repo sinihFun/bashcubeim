@@ -77,7 +77,7 @@ int main() {
 			mvprintw(yy/2, xx/2-7, "b - build mode");
 			mvprintw(yy/2+1, xx/2-9, "z,c - change block");
 			mvprintw(yy/2+2, xx/2-8, "f - place  block");
-			mvprintw(yy/2+3, xx/2-8, "x - delete  mode (doesn't work for windows)");
+			mvprintw(yy/2+3, xx/2-8, "x - delete  mode");
 			mvprintw(yy/2+4, xx/2-7, "r - debug info");
 			mvprintw(yy/2+5, xx/2-4, "g - save");
 		}
