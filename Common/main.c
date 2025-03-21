@@ -9,14 +9,7 @@
 
 int main() {
 	initscr();
-        #ifdef _WIN32
 	int xx, yy, py, px;
-        #else
-	int xx, yy, py, px, jump;
-	int test2 = 0;
-        #endif
-	int xx, yy, py, px, jump;
-	int test2 = 0;
 	int test = 0;
 	char output = ' ';
 	char player = '@';
