@@ -15,6 +15,24 @@ int main() {
 	noecho();
 	curs_set(0);
 	FILE *fptr1;
+	char cfg[] = "qadwsbxzcfrg";
+	char cfgchar;
+	short cfgkeycount = 0;
+	fptr1 = fopen("cfg.txt", "r");
+	if (fptr1 == NULL) {
+		fptr1 = fopen("cfg.txt", "w");
+		fprintf(fptr1, "quit:q\n left:a\n right:d\n jump/up:w\n down:s\n build:b\n delete:x\n change block 1:z\n change block 2:c\n place:f\n debug:r\n save:g");
+		fclose(fptr1);
+	} else {
+		for (int i = 0; i < 134; i++) {
+			cfgchar = fgetc(fptr1);
+			if (cfgchar == ':') {
+				cfgchar = fgetc(fptr1);
+				cfg[cfgkeycount] = cfgchar;
+				cfgkeycount++;
+			}
+		}
+	}
 
 
 
@@ -106,6 +124,7 @@ int main() {
 			mvprintw(yy/2+3, xx/2-8, "x - delete  mode");
 			mvprintw(yy/2+4, xx/2-7, "r - debug info");
 			mvprintw(yy/2+5, xx/2-4, "g - save");
+			mvprintw(yy/2+7, xx/2-16, "you can change these in cfg.txt!");
 		}
 
 		// оутпуты всякие
@@ -195,9 +214,6 @@ int main() {
 			for (int i = 0; i < xx; i++) {
 				map[yy/2][i] = '#';
 			}
-			map[yy/2-1][15] = '#';
-			map[yy/2-1][3] = '#';
-			map[yy/2-3][5] = '#';
 		}	
 	}
 	if (slotselected == 2) {
@@ -213,9 +229,6 @@ int main() {
 			for (int i = 0; i < xx; i++) {
 				map[yy/2][i] = '#';
 			}
-			map[yy/2-1][15] = '#';
-			map[yy/2-1][3] = '#';
-			map[yy/2-3][5] = '#';
 		}	
 	}
 	if (slotselected == 3) {
@@ -231,9 +244,6 @@ int main() {
 			for (int i = 0; i < xx; i++) {
 				map[yy/2][i] = '#';
 			}
-			map[yy/2-1][15] = '#';
-			map[yy/2-1][3] = '#';
-			map[yy/2-3][5] = '#';
 		}	
 	}
 	if (slotselected == 4) {
@@ -249,9 +259,6 @@ int main() {
 			for (int i = 0; i < xx; i++) {
 				map[yy/2][i] = '#';
 			}
-			map[yy/2-1][15] = '#';
-			map[yy/2-1][3] = '#';
-			map[yy/2-3][5] = '#';
 		}	
 	}
 
@@ -272,7 +279,7 @@ int main() {
 	short deletemode = 0;
 
 	// главный цикл
-	while (output != 'q') {
+	while (output != cfg[0]) {
 
 		// отрисовка карты
 		for (int i = 0; i < yy; i++) {
@@ -284,11 +291,11 @@ int main() {
 
 
 		//отрисовка игрока, калькулейшон передвижения
-		if (output == 'd' && map[py][px+1] == ' ' && !buildmode && !deletemode)
+		if (output == cfg[2] && map[py][px+1] == ' ' && !buildmode && !deletemode)
 			px++;
-		else if (output == 'a' && map[py][px-1] == ' ' && !buildmode && !deletemode)
+		else if (output == cfg[1] && map[py][px-1] == ' ' && !buildmode && !deletemode)
 			px--;
-		if (output == 'w' && map[py+1][px] != ' ' && !buildmode && !deletemode)
+		if (output == cfg[3] && map[py+1][px] != ' ' && !buildmode && !deletemode)
 			jumppower = 3;
 		if (map[py-1][px] != ' ')
 			jumppower = 0;
@@ -302,61 +309,61 @@ int main() {
 
 
 		//билд мод
-		if (output == 'b' && !buildmode) {
+		if (output == cfg[5] && !buildmode) {
 			buildmode = 1;
 			deletemode = 0;
 			output = ' ';
 		}
-		if (buildmode && !deletemode && output == 'b')
+		if (buildmode && !deletemode && output == cfg[5])
 			buildmode = 0;
 		if (buildmode && !deletemode) {
-			if (output == 'd')
+			if (output == cfg[2])
 				bx++;
-			if (output == 'a')
+			if (output == cfg[1])
 				bx--;
-			if (output == 'w')
+			if (output == cfg[3])
 				by--;
-			if (output == 's')
+			if (output == cfg[4])
 				by++;
-			if (output == 'z' && bldchar > 0)
+			if (output == cfg[7] && bldchar > 0)
 				bldchar--;
-			if (output == 'c' && bldchar < 30)
+			if (output == cfg[8] && bldchar < 30)
 				bldchar ++;
 
 			mvprintw(by, bx, "%c", buildchars[bldchar]);
 
 			
-			if (output == 'f')
+			if (output == cfg[9])
 				map[by][bx] = buildchars[bldchar];
 		}
 
 
 		//делете мод
-		if (output == 'x' && !deletemode) {
+		if (output == cfg[6] && !deletemode) {
 			buildmode = 0;
 			deletemode = 1;
 			output = ' ';
 		}
-		if (deletemode && output == 'x')
+		if (deletemode && output == cfg[6])
 			deletemode = 0;
 		if (deletemode && !buildmode) {
-			if (output == 'd')
+			if (output == cfg[2])
 				bx++;
-			if (output == 'a')
+			if (output == cfg[1])
 				bx--;
-			if (output == 'w')
+			if (output == cfg[3])
 				by--;
-			if (output == 's')
+			if (output == cfg[4])
 				by++;
 			mvprintw(by, bx, "%c", dltchar);
 
-			if (output == 'f')
+			if (output == cfg[9])
 				map[by][bx] = ' ';
 		}
 
 
 		//сохранялово
-		if (output == 'g') {
+		if (output == cfg[11]) {
 			if (slotselected == 1) {
 				fptr1 = fopen("save1.txt", "w");
 				for (int i = 0; i < yy; i++) {
@@ -393,9 +400,9 @@ int main() {
 
 
 		//системная инфа 
-		if (output == 'r' && devmode == 1) 
+		if (output == cfg[10] && devmode == 1) 
 			devmode = 0;
-		else if (output == 'r' && devmode == 0)
+		else if (output == cfg[10] && devmode == 0)
 			devmode = 1;
 		if (devmode == 1) {
 			mvprintw(0, 0, "resize window to increase map size!");
