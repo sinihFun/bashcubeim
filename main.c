@@ -1,18 +1,22 @@
 
 #include <stdio.h>
+#include "menu.h"
+#ifdef _WIN32
+#include <curses.h>
+#else
 #include <ncurses.h>
+#endif
+
+
 
 int main() {
 	initscr();
-	int xx, yy, py, px, jump;
-	int test2 = 0;
+	int yy, xx, py, px;
 	int test = 0;
 	char output = ' ';
 	char player = '@';
-	short menustatus = 1;
-	short s1ex = 0, s2ex = 0, s3ex = 0, s4ex = 0;
 	getmaxyx(stdscr, yy, xx);
-	int slotselected = 0;
+	int slotselected;
 	noecho();
 	curs_set(0);
 	FILE *fptr1;
@@ -37,165 +41,14 @@ int main() {
 
 
 
-	
 
-	//вычислить свободные слоты
-	fptr1 = fopen("save1.txt", "r");
-	if (fptr1 != NULL)
-		s1ex = 1;
-	fptr1 = fopen("save2.txt", "r");
-	if (fptr1 != NULL)
-		s2ex = 1;
-	fptr1 = fopen("save3.txt", "r");
-	if (fptr1 != NULL)
-		s3ex = 1;
-	fptr1 = fopen("save4.txt", "r");
-	if (fptr1 != NULL)
-		s4ex = 1;
 
 	halfdelay(3);
-	// цикл меню
-	while (menustatus) {
-		//menustatus 1 - главное меню
-		if (menustatus == 1) {
-			mvprintw(yy/2-5, xx/2-5, "BASHCUBEIM");
+	slotselected = menu(yy, xx, fptr1);
 
-			mvprintw(yy/2-3, xx/2-9, "type 'h' for help!");
-			mvprintw(yy/2-2, xx/2-15, "select a save slot! (type 1-4)");
-			mvprintw(yy/2-1, xx/2-12, "type 'x' to erase a slot");
-			if(!s1ex) {
-				mvprintw(yy/2+1, xx/2-7, "slot 1(unused)");
-			} else {
-				mvprintw(yy/2+1, xx/2-3, "slot 1");
-			}
-			if(!s2ex) {
-				mvprintw(yy/2+2, xx/2-7, "slot 2(unused)");
-			} else {
-				mvprintw(yy/2+2, xx/2-3, "slot 2");
-			}
-			if(!s3ex) {
-				mvprintw(yy/2+3, xx/2-7, "slot 3(unused)");
-			} else {
-				mvprintw(yy/2+3, xx/2-3, "slot 3");
-			}
-			if(!s4ex) {
-				mvprintw(yy/2+4, xx/2-7, "slot 4(unused)");
-			} else {
-				mvprintw(yy/2+4, xx/2-3, "slot 4");
-			}
-		}
+	if (slotselected == 0)
+		output = 'q';
 
-		//menustatus 2 - удаление слотов сохранения 
-		else if (menustatus == 2) {
-			mvprintw(yy/2-5, xx/2-5, "BASHCUBEIM");
-
-			mvprintw(yy/2-3, xx/2-9, "type 'h' for help!");
-			mvprintw(yy/2-2, xx/2-17, "select a slot to erase! (type 1-4)");
-			mvprintw(yy/2-1, xx/2-13, "type 'x' to select a slot!");
-			if(!s1ex) {
-				mvprintw(yy/2+1, xx/2-7, "slot 1(unused)");
-			} else {
-				mvprintw(yy/2+1, xx/2-3, "slot 1");
-			}
-			if(!s2ex) {
-				mvprintw(yy/2+2, xx/2-7, "slot 2(unused)");
-			} else {
-				mvprintw(yy/2+2, xx/2-3, "slot 2");
-			}
-			if(!s3ex) {
-				mvprintw(yy/2+3, xx/2-7, "slot 3(unused)");
-			} else {
-				mvprintw(yy/2+3, xx/2-3, "slot 3");
-			}
-			if(!s4ex) {
-				mvprintw(yy/2+4, xx/2-7, "slot 4(unused)");
-			} else {
-				mvprintw(yy/2+4, xx/2-3, "slot 4");
-			}
-		}
-		
-		//menustatus 3 - help menu
-		if (menustatus == 3) {
-			mvprintw(yy/2-5, xx/2-5, "BASHCUBEIM");
-
-			mvprintw(yy/2-3, xx/2-15, "type 'h' to close this message");
-
-			mvprintw(yy/2-1, xx/2-8, "w,a,d - movement");
-			mvprintw(yy/2, xx/2-7, "b - build mode");
-			mvprintw(yy/2+1, xx/2-9, "z,c - change block");
-			mvprintw(yy/2+2, xx/2-8, "f - place  block");
-			mvprintw(yy/2+3, xx/2-8, "x - delete  mode");
-			mvprintw(yy/2+4, xx/2-7, "r - debug info");
-			mvprintw(yy/2+5, xx/2-4, "g - save");
-			mvprintw(yy/2+7, xx/2-16, "you can change these in cfg.txt!");
-		}
-
-		// оутпуты всякие
-		output = getch();
-		if (output == 'x') {
-			if (menustatus == 2) {
-				menustatus = 1;
-			} else {
-				menustatus = 2;
-				output = ' ';
-			}
-		}
-		else if (output == 'h') {
-			if (menustatus == 3) {
-				menustatus = 1;
-			} else {
-				menustatus = 3;
-				output = ' ';
-			}
-		}
-		else if (output == '1') {
-			if (menustatus == 2) {
-				remove("save1.txt");
-				s1ex = 0;
-			} else {
-				menustatus = 0;
-				slotselected = 1;
-				output = ' ';
-			}
-		}
-		else if (output == '2') {
-			if (menustatus == 2) {
-				remove("save2.txt");
-				s2ex = 0;
-			} else {
-				menustatus = 0;
-				slotselected = 2;
-				output = ' ';
-			}
-		}
-		else if (output == '3') {
-			if (menustatus == 2) {
-				remove("save3.txt");
-				s3ex = 0;
-			} else {
-				menustatus = 0;
-				slotselected = 3;
-				output = ' ';
-			}
-		}
-		else if (output == '4') {
-			if (menustatus == 2) {
-				remove("save4.txt");
-				s4ex = 0;
-			} else {
-				menustatus = 0;
-				slotselected = 4;
-				output = ' ';
-			}
-		}
-		else if (output == 'q')
-			break;
-		clear();
-	}
-
-
-
-	
 
 
 	// создание карты
@@ -207,7 +60,7 @@ int main() {
 	}
 	if (slotselected == 1) {
 		fptr1 = fopen("save1.txt", "r");
-		if (fptr1 != NULL) { 
+		if (fptr1 != NULL) {
 			for (int i = 0; i < yy; i++) {
 				for (int g = 0; g < xx; g++)
 					if (feof(fptr1) == 0)
@@ -218,11 +71,11 @@ int main() {
 			for (int i = 0; i < xx; i++) {
 				map[yy/2][i] = '#';
 			}
-		}	
+		}
 	}
 	if (slotselected == 2) {
 		fptr1 = fopen("save2.txt", "r");
-		if (fptr1 != NULL) { 
+		if (fptr1 != NULL) {
 			for (int i = 0; i < yy; i++) {
 				for (int g = 0; g < xx; g++)
 					if (feof(fptr1) == 0)
@@ -233,11 +86,11 @@ int main() {
 			for (int i = 0; i < xx; i++) {
 				map[yy/2][i] = '#';
 			}
-		}	
+		}
 	}
 	if (slotselected == 3) {
 		fptr1 = fopen("save3.txt", "r");
-		if (fptr1 != NULL) { 
+		if (fptr1 != NULL) {
 			for (int i = 0; i < yy; i++) {
 				for (int g = 0; g < xx; g++)
 					if (feof(fptr1) == 0)
@@ -248,11 +101,11 @@ int main() {
 			for (int i = 0; i < xx; i++) {
 				map[yy/2][i] = '#';
 			}
-		}	
+		}
 	}
 	if (slotselected == 4) {
 		fptr1 = fopen("save4.txt", "r");
-		if (fptr1 != NULL) { 
+		if (fptr1 != NULL) {
 			for (int i = 0; i < yy; i++) {
 				for (int g = 0; g < xx; g++)
 					if (feof(fptr1) == 0)
@@ -263,7 +116,7 @@ int main() {
 			for (int i = 0; i < xx; i++) {
 				map[yy/2][i] = '#';
 			}
-		}	
+		}
 	}
 
 
@@ -336,7 +189,7 @@ int main() {
 
 			mvprintw(by, bx, "%c", buildchars[bldchar]);
 
-			
+
 			if (output == cfg[9])
 				map[by][bx] = buildchars[bldchar];
 		}
@@ -403,8 +256,8 @@ int main() {
 		}
 
 
-		//системная инфа 
-		if (output == cfg[10] && devmode == 1) 
+		//системная инфа
+		if (output == cfg[10] && devmode == 1)
 			devmode = 0;
 		else if (output == cfg[10] && devmode == 0)
 			devmode = 1;
@@ -420,7 +273,7 @@ int main() {
 
 
 
-		
+
 		test++;
 		output = getch();
 		clear();
