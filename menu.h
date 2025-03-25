@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdio.h>
 #ifdef _WIN32
 #include <curses.h>
@@ -9,21 +10,21 @@ int menu(int yy, int xx, FILE *fptr1) {
 	short menustatus = 1;
 	int slotselected = 0;
 	char menuoutput = ' ';
-    short s1ex = 0, s2ex = 0, s3ex = 0, s4ex = 0;
+	bool s1ex = false, s2ex = false, s3ex = false, s4ex = false;
 
     //вычислить свободные слоты
 	fptr1 = fopen("save1.txt", "r");
 	if (fptr1 != NULL)
-		s1ex = 1;
+		s1ex = true;
 	fptr1 = fopen("save2.txt", "r");
 	if (fptr1 != NULL)
-		s2ex = 1;
+		s2ex = true;
 	fptr1 = fopen("save3.txt", "r");
 	if (fptr1 != NULL)
-		s3ex = 1;
+		s3ex = true;
 	fptr1 = fopen("save4.txt", "r");
 	if (fptr1 != NULL)
-		s4ex = 1;
+		s4ex = true;
 
 
     //цикл меню лол

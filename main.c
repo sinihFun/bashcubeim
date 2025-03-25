@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <stdbool.h>
 #include "menu.h"
 #ifdef _WIN32
 #include <curses.h>
@@ -8,9 +9,8 @@
 #endif
 
 
-
 int main() {
-	initscr();
+        initscr();
 	int yy, xx, py, px;
 	int test = 0;
 	char output = ' ';
@@ -130,10 +130,10 @@ int main() {
 	char dltchar = 'x';
 	int by = yy/2-2;
 	int bx = xx/2;
-	short devmode = 0;
+	bool devmode = false;
 	short jumppower = 0;
-	short buildmode = 0;
-	short deletemode = 0;
+	bool buildmode = false;
+	bool deletemode = false;
 
 	// главный цикл
 	while (output != cfg[0]) {
@@ -167,12 +167,12 @@ int main() {
 
 		//билд мод
 		if (output == cfg[5] && !buildmode) {
-			buildmode = 1;
-			deletemode = 0;
+			buildmode = true;
+			deletemode = false;
 			output = ' ';
 		}
 		if (buildmode && !deletemode && output == cfg[5])
-			buildmode = 0;
+			buildmode = false;
 		if (buildmode && !deletemode) {
 			if (output == cfg[2])
 				bx++;
@@ -197,12 +197,12 @@ int main() {
 
 		//делете мод
 		if (output == cfg[6] && !deletemode) {
-			buildmode = 0;
-			deletemode = 1;
+			buildmode = false;
+			deletemode = true;
 			output = ' ';
 		}
 		if (deletemode && output == cfg[6])
-			deletemode = 0;
+			deletemode = false;
 		if (deletemode && !buildmode) {
 			if (output == cfg[2])
 				bx++;
@@ -257,10 +257,10 @@ int main() {
 
 
 		//системная инфа
-		if (output == cfg[10] && devmode == 1)
-			devmode = 0;
-		else if (output == cfg[10] && devmode == 0)
-			devmode = 1;
+		if (output == cfg[10] && devmode == true)
+			devmode = false;
+		else if (output == cfg[10] && devmode == false)
+			devmode = true;
 		if (devmode == 1) {
 			mvprintw(0, 0, "resize window to increase map size!");
 			mvprintw(1, 0, "this window has been updated %d times", test);
