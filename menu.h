@@ -129,7 +129,7 @@ int menu(int yy, int xx, FILE *fptr1) {
 				menuoutput = ' ';
 			}
 		}
-		else if (menuoutput == '1') {
+		if (menuoutput == '1') {
             #ifdef _WIN32
 			menustatus = 0;
 			slotselected = 1;
@@ -199,5 +199,4 @@ int menu(int yy, int xx, FILE *fptr1) {
 	}
     return (slotselected);
 }
-
 #endif
