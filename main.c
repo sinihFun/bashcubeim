@@ -4,14 +4,15 @@
 
 #include "menu.h"
 #include "block.h"
+#include "inventory.h"
 
 #include <curses.h>
 
 int main() {
   initscr();
   start_color();
-  printblock(1, 1, 2);
-  getch();
+  WINDOW *inv;
+  bool winprot = false;
   int yy, xx, py, px;
   int test = 0;
   char output = ' ';
@@ -21,6 +22,8 @@ int main() {
   noecho();
   curs_set(0);
   FILE *fptr1;
+
+  
   char cfg[] = "qadwsbxzcfrg";
   char cfgchar;
   short cfgkeycount = 0;
@@ -126,15 +129,17 @@ int main() {
   px = 5;
   test = 0;
   player = '@';
-  int buildchars[] = {1, 2};
+  int buildchars[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
   int bldchar = 0;
   char dltchar = 'x';
   int by = yy/2-2;
   int bx = xx/2;
+  int iy = 1, ix = 1;
   bool devmode = false;
   short jumppower = 0;
   bool buildmode = false;
   bool deletemode = false;
+  bool invmode = false;
 
   // главный цикл
   while (output != cfg[0]) {
@@ -145,8 +150,7 @@ int main() {
         printblock(i, g, map[i][g]);
       }
     }
-
-
+    winprot = false;
 
     //отрисовка игрока, калькулейшон передвижения
     if (output == cfg[2] && map[py][px+1] == 0 && !buildmode && !deletemode)
@@ -164,6 +168,14 @@ int main() {
     if (jumppower == 0 && map[py+1][px] == 0)
       py++;
     mvprintw(py, px, "%c", player);
+
+    if(invmode && output == 'e') {
+      invmode = false;
+      buildmode = true;
+      output = ' ';
+      curs_set(0);
+      halfdelay(3);
+    }
 
 
     //билд мод
@@ -273,11 +285,31 @@ int main() {
     }
 
 
-
-
+    if(buildmode && !invmode && output == 'e') {
+      buildmode = false;
+      invmode = true;
+      output = ' ';
+      curs_set(1);
+      halfdelay(100);
+    }
+      
+    if(invmode) {
+    
+      if(output == 'a' && ix > 1)
+        ix--;
+      else if(output == 'd' && ix < 6)
+        ix++;
+      else if(output == 'w' && iy > 1)
+        iy--;
+      else if(output == 's' && iy < 2)
+        iy++;
+      
+      bldchar = inv_calc(inv, by, bx, winprot, iy, ix, output);
+    }
     test++;
     output = getch();
     clear();
   }
   endwin();
+  return 0;
 }
