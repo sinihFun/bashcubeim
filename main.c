@@ -153,11 +153,11 @@ int main() {
     winprot = false;
 
     //отрисовка игрока, калькулейшон передвижения
-    if (output == cfg[2] && map[py][px+1] == 0 && !buildmode && !deletemode)
+    if (output == cfg[2] && map[py][px+1] == 0 && !buildmode && !deletemode && !invmode)
       px++;
-    else if (output == cfg[1] && map[py][px-1] == 0 && !buildmode && !deletemode)
+    else if (output == cfg[1] && map[py][px-1] == 0 && !buildmode && !deletemode && !invmode)
       px--;
-    if (output == cfg[3] && map[py+1][px] != 0 && !buildmode && !deletemode)
+    if (output == cfg[3] && map[py+1][px] != 0 && !buildmode && !deletemode && !invmode)
       jumppower = 3;
     if (map[py-1][px] != 0)
       jumppower = 0;
@@ -305,6 +305,7 @@ int main() {
         iy++;
       
       bldchar = inv_calc(inv, by, bx, winprot, iy, ix, output);
+      move(by+iy, bx+ix);
     }
     test++;
     output = getch();
