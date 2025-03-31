@@ -33,7 +33,12 @@ int menu(int yy, int xx, FILE *fptr1) {
 	while (menustatus) {
 		//menustatus 1 - главное меню
 		if (menustatus == 1) {
-			mvprintw(yy/2-5, xx/2-5, "BASHCUBEIM");
+			mvprintw(yy/2-11, xx/2-35, "  ____           _____ _    _  _____ _    _ ____  ______ _____ __  __ ");
+			mvprintw(yy/2-10, xx/2-35, " |  _ \\   /\\    / ____| |  | |/ ____| |  | |  _ \\|  ____|_   _|  \\/  |");
+			mvprintw(yy/2-9, xx/2-35, " | |_) | /  \\  | (___ | |__| | |    | |  | | |_) | |__    | | | \\  / |");
+			mvprintw(yy/2-8, xx/2-35, " |  _ < / /\\ \\  \\___ \\|  __  | |    | |  | |  _ <|  __|   | | | |\\/| |");
+			mvprintw(yy/2-7, xx/2-35, " | |_) / ____ \\ ____) | |  | | |____| |__| | |_) | |____ _| |_| |  | |");
+			mvprintw(yy/2-6, xx/2-35, " |____/_/    \\_\\_____/|_|  |_|\\_____|\\____/|____/|______|_____|_|  |_|");
 
 			mvprintw(yy/2-3, xx/2-9, "type 'h' for help!");
 			mvprintw(yy/2-2, xx/2-15, "select a save slot! (type 1-4)");
